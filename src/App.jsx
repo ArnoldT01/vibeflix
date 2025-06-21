@@ -27,12 +27,23 @@ const App = () => {
     const [isLoading, setIsLoading] = useState(false);
     
     const [trendingMovies, setTrendingMovies] = useState([]);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [hasMorePages, setHasMorePages] = useState(true);
+
+    const [isLoadingInitial, setIsLoadingInitial] = useState(false);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
     // add loading and error message for trending movies
 
     useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm]);
 
     const fetchMovies = async (query = '', page = 1, isLoadMore = false) => {
-        setIsLoading(true);
+        if (isLoadMore) {
+            setIsLoadingMore(true);
+        } else {
+            setIsLoadingInitial(true);
+        }
+
         setErrorMessage('');
 
         try {
@@ -63,10 +74,13 @@ const App = () => {
             console.log(`Error fetching movies: ${error}`);
             setErrorMessage('Error fetching movies. Please try again later.');
         } finally {
-            setIsLoading(false);
+            if (isLoadMore) {
+                setIsLoadingMore(false);
+            } else {
+                setIsLoadingInitial(false);
+            }
         }
     };
-
 
     const loadTrendingMovies = async () => {
         try {
@@ -86,9 +100,6 @@ const App = () => {
     useEffect(() => {
         loadTrendingMovies();
     }, []);
-
-    const [currentPage, setCurrentPage] = useState(1);
-    const [hasMorePages, setHasMorePages] = useState(true);
 
     return (
         <main>
@@ -119,27 +130,35 @@ const App = () => {
                 <section className="all-movies">
                     <h2>All Movies</h2>
 
-                    {isLoading ? (
-                        <Spinner/>
+                    {isLoadingInitial ? (
+                        <Spinner />
                     ) : errorMessage ? (
                         <p className="text-red-500">{errorMessage}</p>
                     ) : (
-                        <ul>
-                            {movieList.map((movie) => (
-                                <MovieCard key={movie.id} movie={movie}/>
-                            ))}
-                        </ul>
+                        <>
+                            <ul>
+                                {movieList.map((movie) => (
+                                    <MovieCard key={movie.id} movie={movie} />
+                                ))}
+                            </ul>
+
+                            {hasMorePages && !isLoadingMore && (
+                                <button
+                                    onClick={() => {
+                                        const nextPage = currentPage + 1;
+                                        setCurrentPage(nextPage);
+                                        fetchMovies(debouncedSearchTerm, nextPage, true);
+                                    }}
+                                    className="load-more"
+                                >
+                                    Load More
+                                </button>
+                            )}
+
+                            {isLoadingMore && <Spinner />}
+                        </>
                     )}
                 </section>
-                {hasMorePages && !isLoading && (
-                    <button onClick={() => {
-                        const nextPage = currentPage + 1;
-                        setCurrentPage(nextPage);
-                        fetchMovies(debouncedSearchTerm, nextPage, true);
-                    }} className="load-more">
-                        Load More
-                    </button>
-                )}
             </div>
         </main>
     )
