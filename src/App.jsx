@@ -90,7 +90,6 @@ const App = () => {
 
             <div className="wrapper">
                 <header>
-                    <img src="./hero.png" alt="Hero Banner"/>
                     <h1>Find <span className="text-gradient">Movies</span> You'll Enjoy Without the Hassle</h1>
 
                     <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
@@ -98,7 +97,7 @@ const App = () => {
 
                 {trendingMovies.length > 0 && (
                     <section className="trending">
-                        <h2>Trending Movies</h2>
+                        <h2>Trending On the site</h2>
 
                         <ul>
                             {trendingMovies.map((movie, index) => (
