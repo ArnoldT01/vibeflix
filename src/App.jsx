@@ -4,6 +4,7 @@ import Spinner from "./components/Spinner";
 import MovieCard from "./components/MovieCard";
 import { useDebounce } from 'react-use';
 import { getTrendingMovies, updateSearchCount } from "./appwrite";
+import "./App.css"
 
 const API_BASE_URL = 'https://api.themoviedb.org/3';
 
@@ -30,42 +31,42 @@ const App = () => {
 
     useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm]);
 
-    const fetchMovies = async (query = '') => {
+    const fetchMovies = async (query = '', page = 1, isLoadMore = false) => {
         setIsLoading(true);
         setErrorMessage('');
 
         try {
             const endpoint = query
-                ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
-                : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
+                ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}&page=${page}`
+                : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc&page=${page}`;
 
             const response = await fetch(endpoint, API_OPTIONS);
 
-            if (!response.ok) {
-                throw new Error('Failed to fetch movies');
-            }
+            if (!response.ok) throw new Error('Failed to fetch movies');
 
             const data = await response.json();
 
-            if (data.Response === 'False') {
-                setErrorMessage(data.Error || 'Failed to fetch movies');
-                setMovieList([]);
+            if (data.results.length === 0) {
+                setHasMorePages(false);
                 return;
             }
 
-            setMovieList(data.results || []);
+            setMovieList(prev => isLoadMore ? [...prev, ...data.results] : data.results);
 
-            if (query && data.results.length > 0) {
+            if (query && data.results.length > 0 && page === 1) {
                 await updateSearchCount(query, data.results[0]);
             }
 
+            setHasMorePages(data.page < data.total_pages);
+
         } catch (error) {
             console.log(`Error fetching movies: ${error}`);
-            setErrorMessage('Error fetching movies. Please try again later.')
+            setErrorMessage('Error fetching movies. Please try again later.');
         } finally {
             setIsLoading(false);
         }
-    }
+    };
+
 
     const loadTrendingMovies = async () => {
         try {
@@ -77,12 +78,17 @@ const App = () => {
     }
 
     useEffect(() => {
-        fetchMovies(debouncedSearchTerm);
+        setCurrentPage(1);
+        setHasMorePages(true);
+        fetchMovies(debouncedSearchTerm, 1, false);
     }, [debouncedSearchTerm]);
 
     useEffect(() => {
         loadTrendingMovies();
     }, []);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [hasMorePages, setHasMorePages] = useState(true);
 
     return (
         <main>
@@ -125,6 +131,15 @@ const App = () => {
                         </ul>
                     )}
                 </section>
+                {hasMorePages && !isLoading && (
+                    <button onClick={() => {
+                        const nextPage = currentPage + 1;
+                        setCurrentPage(nextPage);
+                        fetchMovies(debouncedSearchTerm, nextPage, true);
+                    }} className="load-more">
+                        Load More
+                    </button>
+                )}
             </div>
         </main>
     )
