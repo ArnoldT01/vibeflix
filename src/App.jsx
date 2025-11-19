@@ -1,9 +1,8 @@
-import { React, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Search from "./components/Search";
 import Spinner from "./components/Spinner";
 import MovieCard from "./components/MovieCard";
 import { useDebounce } from 'react-use';
-import { getTrendingMovies, updateSearchCount } from "./appwrite";
 import "./App.css"
 
 const API_BASE_URL = 'https://api.themoviedb.org/3';
@@ -25,15 +24,12 @@ const App = () => {
     const [movieList, setMovieList] = useState([]);
     const [errorMessage, setErrorMessage] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-    
-    const [trendingMovies, setTrendingMovies] = useState([]);
 
     const [currentPage, setCurrentPage] = useState(1);
     const [hasMorePages, setHasMorePages] = useState(true);
 
     const [isLoadingInitial, setIsLoadingInitial] = useState(false);
     const [isLoadingMore, setIsLoadingMore] = useState(false);
-    // add loading and error message for trending movies
 
     useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm]);
 
@@ -64,10 +60,6 @@ const App = () => {
 
             setMovieList(prev => isLoadMore ? [...prev, ...data.results] : data.results);
 
-            if (query && data.results.length > 0 && page === 1) {
-                await updateSearchCount(query, data.results[0]);
-            }
-
             setHasMorePages(data.page < data.total_pages);
 
         } catch (error) {
@@ -82,24 +74,11 @@ const App = () => {
         }
     };
 
-    const loadTrendingMovies = async () => {
-        try {
-            const movies = await getTrendingMovies();
-            setTrendingMovies(movies);
-        } catch (error) {
-            console.error(`Error fetching trending movies: ${error}`);
-        }
-    }
-
     useEffect(() => {
         setCurrentPage(1);
         setHasMorePages(true);
         fetchMovies(debouncedSearchTerm, 1, false);
     }, [debouncedSearchTerm]);
-
-    useEffect(() => {
-        loadTrendingMovies();
-    }, []);
 
     return (
         <main>
@@ -111,21 +90,6 @@ const App = () => {
 
                     <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
                 </header>
-
-                {trendingMovies.length > 0 && (
-                    <section className="trending">
-                        <h2>Trending On the site</h2>
-
-                        <ul>
-                            {trendingMovies.map((movie, index) => (
-                                <li key={movie.$id}>
-                                    <p>{index + 1}</p>
-                                    <img src={movie.poster_url} alt={movie.title}/>
-                                </li>
-                            ))}
-                        </ul>
-                    </section>
-                )}
 
                 <section className="all-movies">
                     <h2>All Movies</h2>
@@ -164,4 +128,4 @@ const App = () => {
     )
 }
 
-export default App
+export default App;
