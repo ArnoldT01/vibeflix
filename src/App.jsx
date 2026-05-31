@@ -156,7 +156,9 @@ const App = () => {
                     />
                 </header>
 
-                <TrendingMovies onSelect={setSelectedMovie} mediaType={mediaType} />
+                {!searchTerm && !selectedYear && !ratingSort && !selectedGenre && (
+                    <TrendingMovies onSelect={setSelectedMovie} mediaType={mediaType} />
+                )}
 
                 <section className="all-movies">
                     <h2>{mediaType === 'tv' ? 'All Series' : mediaType === 'movie' ? 'All Movies' : 'All'}</h2>
