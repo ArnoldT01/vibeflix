@@ -1,33 +1,62 @@
-import React from "react";
+import { useState, useEffect } from "react";
+
+const API_BASE_URL = 'https://api.themoviedb.org/3';
+const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
+const API_OPTIONS = {
+    method: 'GET',
+    headers: {
+        accept: 'application/json',
+        Authorization: `Bearer ${API_KEY}`
+    }
+};
+
+const formatRuntime = (mins) => {
+    if (!mins) return null;
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    return h && m ? `${h}h ${m}m` : h ? `${h}h` : `${m}m`;
+};
 
 const MovieCard = ({ movie, onSelect }) => {
-    const { title, vote_average, poster_path, release_date, original_language } = movie;
+    const { id, title, vote_average, poster_path, release_date } = movie;
+    const [runtime, setRuntime] = useState(null);
+
+    useEffect(() => {
+        let cancelled = false;
+        const fetchDetails = async () => {
+            try {
+                const res = await fetch(`${API_BASE_URL}/movie/${id}`, API_OPTIONS);
+                const data = await res.json();
+                if (!cancelled) setRuntime(data.runtime || null);
+            } catch (e) {}
+        };
+        fetchDetails();
+        return () => { cancelled = true; };
+    }, [id]);
+
+    const year = release_date ? release_date.split('-')[0] : 'N/A';
+
     return (
-        <div className="movie-card" onClick={() => onSelect(movie)} style={{ cursor: "pointer" }}>
+        <div className="movie-card" onClick={() => onSelect(movie)}>
             <img
-                src={poster_path ? `https://image.tmdb.org/t/p/w500/${poster_path}` : `/no-movie.png`}
-                alt={title}/>
+                src={poster_path ? `https://image.tmdb.org/t/p/w500/${poster_path}` : '/no-movie.png'}
+                alt={title}
+            />
 
-            <div className="mt-4">
+            <div className="card-rating">
+                <img src="star.svg" alt="Star" />
+                <span>{vote_average ? vote_average.toFixed(1) : 'N/A'}</span>
+            </div>
+
+            <div className="card-info">
                 <h3>{title}</h3>
-
-                <div className="content">
-                    <div className="rating">
-                        <img src="star.svg" alt="Star icon"/>
-                        <p>{vote_average ? vote_average.toFixed(1) : 'N/A'}</p>
-                    </div>
-
-                    <span>•</span>
-                    <p className="lang">{original_language}</p>
-
-                    <span>•</span>
-                    <p className="year">
-                        {release_date ? release_date.split('-')[0] : 'N/A'}
-                    </p>
+                <div className="card-meta">
+                    <span>{year}</span>
+                    {runtime && <span>{formatRuntime(runtime)}</span>}
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default MovieCard
+export default MovieCard;

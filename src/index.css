@@ -121,42 +121,81 @@
   }
 
   .movie-card {
-    @apply bg-dark-100 p-5 rounded-2xl shadow-inner shadow-light-100/10;
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    aspect-ratio: 2 / 3;
+    background: #0d0b1e;
 
-    & img {
-      @apply rounded-lg h-auto w-full;
+    & > img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s ease;
     }
 
-    & h3 {
-      @apply text-white font-bold text-base line-clamp-1;
+    &:hover > img {
+      transform: scale(1.04);
     }
 
-    & .content {
-      @apply mt-2 flex flex-row items-center flex-wrap gap-2;
+    & .card-rating {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(3, 0, 20, 0.7);
+      backdrop-filter: blur(4px);
+      border-radius: 999px;
+      padding: 3px 8px;
+
+      & img {
+        width: 13px;
+        height: 13px;
+        object-fit: contain;
+      }
+
+      & span {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #fff;
+      }
     }
 
-    & .rating {
-      @apply flex flex-row items-center gap-1;
-    }
+    & .card-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 2rem 0.75rem 0.75rem;
+      background: linear-gradient(to top, rgba(3, 0, 20, 0.95) 0%, transparent 100%);
 
-    & .rating img {
-      @apply size-4 object-contain;
-    }
+      & h3 {
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.85rem;
+        line-height: 1.2;
+        margin-bottom: 0.35rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
 
-    & .rating p {
-      @apply font-bold text-base text-white;
-    }
+      & .card-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
 
-    & .content span {
-      @apply text-sm text-gray-100;
-    }
-
-    & .content .lang {
-      @apply capitalize text-gray-100 font-medium text-base;
-    }
-
-    & .content .year {
-      @apply text-gray-100 font-medium text-base;
+        & span {
+          font-size: 0.72rem;
+          color: rgba(255,255,255,0.65);
+          font-weight: 500;
+        }
+      }
     }
   }
 }
