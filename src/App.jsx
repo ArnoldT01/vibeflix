@@ -3,7 +3,6 @@ import Search from "./components/Search";
 import Filters from "./components/Filters";
 import Spinner from "./components/Spinner";
 import MovieCard from "./components/MovieCard";
-import MovieModal from "./components/MovieModal";
 import TrendingMovies from "./components/TrendingMovies";
 import "./App.css"
 
@@ -32,8 +31,6 @@ const App = () => {
 
     const [isLoadingInitial, setIsLoadingInitial] = useState(false);
     const [isLoadingMore, setIsLoadingMore] = useState(false);
-
-    const [selectedMovie, setSelectedMovie] = useState(null);
 
     const [genres, setGenres] = useState([]);
     const [selectedYear, setSelectedYear] = useState('');
@@ -133,7 +130,6 @@ const App = () => {
     }, [debouncedSearchTerm, selectedYear, selectedGenre, ratingSort, mediaType]);
 
     return (
-        <>
         <main>
             <div className="pattern"/>
 
@@ -157,7 +153,7 @@ const App = () => {
                 </header>
 
                 {!searchTerm && !selectedYear && !ratingSort && !selectedGenre && (
-                    <TrendingMovies onSelect={setSelectedMovie} mediaType={mediaType} />
+                    <TrendingMovies mediaType={mediaType} />
                 )}
 
                 <section className="all-movies">
@@ -171,7 +167,7 @@ const App = () => {
                         <>
                             <ul>
                                 {movieList.map((movie) => (
-                                    <MovieCard key={movie.id} movie={movie} onSelect={setSelectedMovie} />
+                                    <MovieCard key={movie.id} movie={movie} />
                                 ))}
                             </ul>
 
@@ -194,11 +190,6 @@ const App = () => {
                 </section>
             </div>
         </main>
-
-        {selectedMovie && (
-            <MovieModal movie={selectedMovie} onClose={() => setSelectedMovie(null)} />
-        )}
-    </>
     )
 }
 

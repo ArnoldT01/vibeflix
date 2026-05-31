@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const API_BASE_URL = 'https://api.themoviedb.org/3';
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -17,15 +18,15 @@ const formatRuntime = (mins) => {
     return h && m ? `${h}h ${m}m` : h ? `${h}h` : `${m}m`;
 };
 
-const MovieCard = ({ movie, onSelect }) => {
+const MovieCard = ({ movie }) => {
     const { id, title, vote_average, poster_path, release_date } = movie;
+    const kind = movie.media_type === 'tv' ? 'tv' : 'movie';
     const [runtime, setRuntime] = useState(null);
 
     useEffect(() => {
         let cancelled = false;
         const fetchDetails = async () => {
             try {
-                const kind = movie.media_type === 'tv' ? 'tv' : 'movie';
                 const res = await fetch(`${API_BASE_URL}/${kind}/${id}`, API_OPTIONS);
                 const data = await res.json();
                 if (!cancelled) {
@@ -38,12 +39,12 @@ const MovieCard = ({ movie, onSelect }) => {
         };
         fetchDetails();
         return () => { cancelled = true; };
-    }, [id, movie.media_type]);
+    }, [id, kind]);
 
     const year = release_date ? release_date.split('-')[0] : 'N/A';
 
     return (
-        <div className="movie-card" onClick={() => onSelect(movie)}>
+        <Link to={`/${kind}/${id}`} className="movie-card">
             <img
                 src={poster_path ? `https://image.tmdb.org/t/p/w500/${poster_path}` : `${import.meta.env.BASE_URL}/no-movie.png`}
                 alt={title}
@@ -61,7 +62,7 @@ const MovieCard = ({ movie, onSelect }) => {
                     {runtime && <span>{formatRuntime(runtime)}</span>}
                 </div>
             </div>
-        </div>
+        </Link>
     );
 };
 

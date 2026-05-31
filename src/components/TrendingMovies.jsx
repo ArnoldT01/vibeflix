@@ -18,7 +18,7 @@ const TITLES = {
     all: 'Trending This Week',
 };
 
-const TrendingMovies = ({ onSelect, mediaType = 'all' }) => {
+const TrendingMovies = ({ mediaType = 'all' }) => {
     const [movies, setMovies] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const scrollRef = useRef(null);
@@ -63,7 +63,7 @@ const TrendingMovies = ({ onSelect, mediaType = 'all' }) => {
                     <div className="trending-scroll" ref={scrollRef}>
                         {movies.map((movie) => (
                             <div className="trending-item" key={movie.id}>
-                                <MovieCard movie={movie} onSelect={onSelect} />
+                                <MovieCard movie={movie} />
                             </div>
                         ))}
                     </div>
