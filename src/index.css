@@ -121,22 +121,30 @@
   }
 
   .movie-card {
+    display: block;
+    width: 100%;
     position: relative;
     border-radius: 12px;
     overflow: hidden;
+    isolation: isolate;
     cursor: pointer;
     aspect-ratio: 2 / 3;
     background: #0d0b1e;
 
-    & > img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      transition: transform 0.3s ease;
+    & .card-poster {
+      position: absolute;
+      inset: 0;
+
+      & img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.3s ease;
+      }
     }
 
-    &:hover > img {
+    &:hover .card-poster img {
       transform: scale(1.04);
     }
 
