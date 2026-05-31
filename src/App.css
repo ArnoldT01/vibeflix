@@ -135,7 +135,7 @@
 }
 
 .trending-item {
-  flex: 0 0 200px;
+  flex: 0 0 calc((100% - 5 * 1.25rem) / 6);
   scroll-snap-align: start;
 }
 

@@ -3,9 +3,19 @@ import React from "react";
 const currentYear = new Date().getFullYear();
 const years = Array.from({ length: currentYear - 1899 }, (_, i) => currentYear - i);
 
-const Filters = ({ genres, selectedYear, setSelectedYear, ratingSort, setRatingSort, selectedGenre, setSelectedGenre }) => {
+const Filters = ({ genres, selectedYear, setSelectedYear, ratingSort, setRatingSort, selectedGenre, setSelectedGenre, mediaType, setMediaType }) => {
     return (
         <div className="filters">
+            <select
+                value={mediaType}
+                onChange={(e) => setMediaType(e.target.value)}
+                aria-label="Filter by type"
+            >
+                <option value="all">All</option>
+                <option value="movie">Movies</option>
+                <option value="tv">Series</option>
+            </select>
+
             <select
                 value={selectedYear}
                 onChange={(e) => setSelectedYear(e.target.value)}

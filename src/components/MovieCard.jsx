@@ -25,21 +25,27 @@ const MovieCard = ({ movie, onSelect }) => {
         let cancelled = false;
         const fetchDetails = async () => {
             try {
-                const res = await fetch(`${API_BASE_URL}/movie/${id}`, API_OPTIONS);
+                const kind = movie.media_type === 'tv' ? 'tv' : 'movie';
+                const res = await fetch(`${API_BASE_URL}/${kind}/${id}`, API_OPTIONS);
                 const data = await res.json();
-                if (!cancelled) setRuntime(data.runtime || null);
+                if (!cancelled) {
+                    const mins = kind === 'tv'
+                        ? (data.episode_run_time?.[0] || null)
+                        : (data.runtime || null);
+                    setRuntime(mins);
+                }
             } catch (e) {}
         };
         fetchDetails();
         return () => { cancelled = true; };
-    }, [id]);
+    }, [id, movie.media_type]);
 
     const year = release_date ? release_date.split('-')[0] : 'N/A';
 
     return (
         <div className="movie-card" onClick={() => onSelect(movie)}>
             <img
-                src={poster_path ? `https://image.tmdb.org/t/p/w500/${poster_path}` : '/no-movie.png'}
+                src={poster_path ? `https://image.tmdb.org/t/p/w500/${poster_path}` : `${import.meta.env.BASE_URL}/no-movie.png`}
                 alt={title}
             />
 

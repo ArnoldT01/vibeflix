@@ -12,25 +12,39 @@ const API_OPTIONS = {
     }
 };
 
-const TrendingMovies = ({ onSelect }) => {
+const TITLES = {
+    movie: 'Trending Movies This Week',
+    tv: 'Trending Series This Week',
+    all: 'Trending This Week',
+};
+
+const TrendingMovies = ({ onSelect, mediaType = 'all' }) => {
     const [movies, setMovies] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const scrollRef = useRef(null);
 
     useEffect(() => {
+        setIsLoading(true);
+        const kind = mediaType === 'tv' ? 'tv' : mediaType === 'movie' ? 'movie' : 'all';
         const fetchTrending = async () => {
             try {
-                const response = await fetch(`${API_BASE_URL}/trending/movie/week`, API_OPTIONS);
+                const response = await fetch(`${API_BASE_URL}/trending/${kind}/week`, API_OPTIONS);
                 const data = await response.json();
-                setMovies(data.results || []);
+                const results = (data.results || []).map(item => ({
+                    ...item,
+                    title: item.title || item.name,
+                    release_date: item.release_date || item.first_air_date,
+                    media_type: item.media_type || kind,
+                }));
+                setMovies(results);
             } catch (e) {
-                console.error('Failed to fetch trending movies', e);
+                console.error('Failed to fetch trending', e);
             } finally {
                 setIsLoading(false);
             }
         };
         fetchTrending();
-    }, []);
+    }, [mediaType]);
 
     const scroll = (dir) => {
         if (scrollRef.current) {
@@ -40,7 +54,7 @@ const TrendingMovies = ({ onSelect }) => {
 
     return (
         <section className="trending-section">
-            <h2>Trending Movies This Week</h2>
+            <h2>{TITLES[mediaType] ?? TITLES.all}</h2>
             {isLoading ? (
                 <Spinner />
             ) : (

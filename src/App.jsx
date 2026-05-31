@@ -39,6 +39,7 @@ const App = () => {
     const [selectedYear, setSelectedYear] = useState('');
     const [ratingSort, setRatingSort] = useState('');
     const [selectedGenre, setSelectedGenre] = useState('');
+    const [mediaType, setMediaType] = useState('all');
 
     const debounceTimer = useRef(null);
     useEffect(() => {
@@ -49,18 +50,20 @@ const App = () => {
 
     useEffect(() => {
         const fetchGenres = async () => {
+            const kind = mediaType === 'tv' ? 'tv' : 'movie';
             try {
-                const response = await fetch(`${API_BASE_URL}/genre/movie/list`, API_OPTIONS);
+                const response = await fetch(`${API_BASE_URL}/genre/${kind}/list`, API_OPTIONS);
                 const data = await response.json();
                 setGenres(data.genres || []);
+                setSelectedGenre('');
             } catch (e) {
                 console.log('Failed to fetch genres', e);
             }
         };
         fetchGenres();
-    }, []);
+    }, [mediaType]);
 
-    const fetchMovies = async (query = '', page = 1, isLoadMore = false, filters = {}) => {
+    const fetchMovies = async (query = '', page = 1, isLoadMore = false, filters = {}, type = 'all') => {
         if (isLoadMore) {
             setIsLoadingMore(true);
         } else {
@@ -71,24 +74,25 @@ const App = () => {
 
         try {
             const { year, genre, sort } = filters;
+            const kind = type === 'tv' ? 'tv' : 'movie';
 
             let endpoint;
             if (query) {
                 const params = new URLSearchParams({ query, page });
-                if (year) params.set('year', year);
-                endpoint = `${API_BASE_URL}/search/movie?${params}`;
+                if (year) params.set(kind === 'tv' ? 'first_air_date_year' : 'year', year);
+                endpoint = `${API_BASE_URL}/search/${kind}?${params}`;
             } else {
                 const sortBy = sort === 'asc' ? 'vote_average.asc' : sort === 'desc' ? 'vote_average.desc' : 'popularity.desc';
                 const params = new URLSearchParams({ sort_by: sortBy, page });
                 if (sort) params.set('vote_count.gte', 50);
-                if (year) params.set('primary_release_year', year);
+                if (year) params.set(kind === 'tv' ? 'first_air_date_year' : 'primary_release_year', year);
                 if (genre) params.set('with_genres', genre);
-                endpoint = `${API_BASE_URL}/discover/movie?${params}`;
+                endpoint = `${API_BASE_URL}/discover/${kind}?${params}`;
             }
 
             const response = await fetch(endpoint, API_OPTIONS);
 
-            if (!response.ok) throw new Error('Failed to fetch movies');
+            if (!response.ok) throw new Error('Failed to fetch');
 
             const data = await response.json();
 
@@ -97,17 +101,22 @@ const App = () => {
                 return;
             }
 
-            let results = data.results;
+            let results = data.results.map(item => ({
+                ...item,
+                title: item.title || item.name,
+                release_date: item.release_date || item.first_air_date,
+                media_type: kind,
+            }));
+
             if (query && sort === 'asc') results = [...results].sort((a, b) => a.vote_average - b.vote_average);
             if (query && sort === 'desc') results = [...results].sort((a, b) => b.vote_average - a.vote_average);
 
             setMovieList(prev => isLoadMore ? [...prev, ...results] : results);
-
             setHasMorePages(data.page < data.total_pages);
 
         } catch (error) {
-            console.log(`Error fetching movies: ${error}`);
-            setErrorMessage('Error fetching movies. Please try again later.');
+            console.log(`Error fetching: ${error}`);
+            setErrorMessage('Error fetching results. Please try again later.');
         } finally {
             if (isLoadMore) {
                 setIsLoadingMore(false);
@@ -120,8 +129,8 @@ const App = () => {
     useEffect(() => {
         setCurrentPage(1);
         setHasMorePages(true);
-        fetchMovies(debouncedSearchTerm, 1, false, { year: selectedYear, genre: selectedGenre, sort: ratingSort });
-    }, [debouncedSearchTerm, selectedYear, selectedGenre, ratingSort]);
+        fetchMovies(debouncedSearchTerm, 1, false, { year: selectedYear, genre: selectedGenre, sort: ratingSort }, mediaType);
+    }, [debouncedSearchTerm, selectedYear, selectedGenre, ratingSort, mediaType]);
 
     return (
         <>
@@ -142,13 +151,15 @@ const App = () => {
                         setRatingSort={setRatingSort}
                         selectedGenre={selectedGenre}
                         setSelectedGenre={setSelectedGenre}
+                        mediaType={mediaType}
+                        setMediaType={setMediaType}
                     />
                 </header>
 
-                <TrendingMovies onSelect={setSelectedMovie} />
+                <TrendingMovies onSelect={setSelectedMovie} mediaType={mediaType} />
 
                 <section className="all-movies">
-                    <h2>All Movies</h2>
+                    <h2>{mediaType === 'tv' ? 'All Series' : mediaType === 'movie' ? 'All Movies' : 'All'}</h2>
 
                     {isLoadingInitial ? (
                         <Spinner />
@@ -167,7 +178,7 @@ const App = () => {
                                     onClick={() => {
                                         const nextPage = currentPage + 1;
                                         setCurrentPage(nextPage);
-                                        fetchMovies(debouncedSearchTerm, nextPage, true, { year: selectedYear, genre: selectedGenre, sort: ratingSort });
+                                        fetchMovies(debouncedSearchTerm, nextPage, true, { year: selectedYear, genre: selectedGenre, sort: ratingSort }, mediaType);
                                     }}
                                     className="load-more"
                                 >
