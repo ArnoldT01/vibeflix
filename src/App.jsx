@@ -4,6 +4,7 @@ import Filters from "./components/Filters";
 import Spinner from "./components/Spinner";
 import MovieCard from "./components/MovieCard";
 import MovieModal from "./components/MovieModal";
+import TrendingMovies from "./components/TrendingMovies";
 import "./App.css"
 
 const API_BASE_URL = 'https://api.themoviedb.org/3';
@@ -143,6 +144,8 @@ const App = () => {
                         setSelectedGenre={setSelectedGenre}
                     />
                 </header>
+
+                <TrendingMovies onSelect={setSelectedMovie} />
 
                 <section className="all-movies">
                     <h2>All Movies</h2>
