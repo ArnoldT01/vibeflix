@@ -24,38 +24,19 @@ const MoviePage = () => {
 
     const [details, setDetails] = useState(null);
     const [trailerKey, setTrailerKey] = useState(null);
-    const [isCam, setIsCam] = useState(false);
     const [view, setView] = useState("info"); // "info" | "trailer" | "watch"
 
     useEffect(() => {
         window.scrollTo(0, 0);
         const fetch_ = async () => {
-            const [detailRes, releaseDatesRes] = await Promise.all([
-                fetch(`${API_BASE_URL}/${pathKind}/${id}?append_to_response=videos`, API_OPTIONS),
-                pathKind === "movie"
-                    ? fetch(`${API_BASE_URL}/movie/${id}/release_dates`, API_OPTIONS)
-                    : Promise.resolve(null),
-            ]);
-
-            const data = await detailRes.json();
+            const res = await fetch(`${API_BASE_URL}/${pathKind}/${id}?append_to_response=videos`, API_OPTIONS);
+            const data = await res.json();
             setDetails(data);
 
             const trailer = data.videos?.results?.find(
                 (v) => v.type === "Trailer" && v.site === "YouTube"
             );
             setTrailerKey(trailer?.key ?? null);
-
-            if (pathKind === "movie" && releaseDatesRes) {
-                const rdData = await releaseDatesRes.json();
-                const today = new Date();
-                const allDates = (rdData.results ?? [])
-                    .flatMap((r) => r.release_dates)
-                    .filter((r) => r.type === 4 || r.type === 5);
-                const hasProperRelease = allDates.some(
-                    (r) => r.release_date && new Date(r.release_date) <= today
-                );
-                setIsCam(!hasProperRelease);
-            }
         };
         fetch_();
     }, [id, pathKind]);
@@ -91,7 +72,6 @@ const MoviePage = () => {
                 <button className="page-back-btn" onClick={() => navigate(-1)}>
                     ← Back
                 </button>
-                {isCam && <span className="cam-badge">CAM</span>}
                 <div className="movie-page-hero-content">
                     <h1 className="movie-page-title">{title}</h1>
                     <div className="movie-page-tags">

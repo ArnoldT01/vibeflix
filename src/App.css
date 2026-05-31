@@ -268,7 +268,7 @@
 
 .movie-page-hero {
   position: relative;
-  min-height: 65vh;
+  min-height: 100vh;
   background-size: cover;
   background-position: center top;
   display: flex;
