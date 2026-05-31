@@ -61,8 +61,8 @@ const MoviePage = () => {
         : null;
     const embedBase = import.meta.env.VITE_EMBED_BASE_URL;
     const embedSrc = pathKind === "tv"
-        ? `${embedBase}/tv/${id}`
-        : `${embedBase}/movie/${id}`;
+        ? `${embedBase}/tv/${id}?autoplay=false`
+        : `${embedBase}/movie/${id}?autoplay=false`;
 
     return (
         <div className="movie-page">

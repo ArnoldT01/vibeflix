@@ -49,8 +49,8 @@ const MovieModal = ({ movie, onClose }) => {
 
     const embedBase = import.meta.env.VITE_EMBED_BASE_URL;
     const embedSrc = kind === "tv"
-        ? `${embedBase}/tv/${movie.id}`
-        : `${embedBase}/movie/${movie.id}`;
+        ? `${embedBase}/tv/${movie.id}?autoplay=false`
+        : `${embedBase}/movie/${movie.id}?autoplay=false`;
 
     return (
         <div
