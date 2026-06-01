@@ -22,6 +22,12 @@ const HomePage = () => {
     return (
         <main>
             <div className="wrapper">
+                <nav className="flex items-center gap-3 mb-6">
+                    <img src="/favicon.svg" alt="VibeFlix" className="w-10 h-10" />
+                    <span className="text-gradient" style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '2rem', letterSpacing: '0.06em' }}>
+                        VibeFlix
+                    </span>
+                </nav>
                 <header>
                     <h1>Find <span className="text-gradient">Movies</span> You'll Enjoy Without the Hassle</h1>
                     <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D6C7FF"/>
+      <stop offset="100%" stop-color="#AB8BFF"/>
+    </linearGradient>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f0d23"/>
+      <stop offset="100%" stop-color="#030014"/>
+    </linearGradient>
+  </defs>
+  <!-- Background rounded square -->
+  <rect width="32" height="32" rx="7" fill="url(#bg)"/>
+  <!-- Subtle border glow -->
+  <rect width="32" height="32" rx="7" fill="none" stroke="#AB8BFF" stroke-width="0.75" opacity="0.35"/>
+  <!-- Play triangle -->
+  <polygon points="11,7 11,25 26,16" fill="url(#g)"/>
+</svg>
