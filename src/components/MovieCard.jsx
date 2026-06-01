@@ -17,7 +17,7 @@ const isCamRelease = (releaseDates) => {
     return !allDates.some((r) => r.release_date && new Date(r.release_date) <= today);
 };
 
-const MovieCard = ({ movie }) => {
+const MovieCard = ({ movie, index = 0 }) => {
     const { id, title, vote_average, poster_path, release_date } = movie;
     const kind = movie.media_type === 'tv' ? 'tv' : 'movie';
     const [runtime, setRuntime] = useState(null);
@@ -42,11 +42,12 @@ const MovieCard = ({ movie }) => {
     const year = release_date ? release_date.split('-')[0] : 'N/A';
 
     return (
-        <Link to={`/${kind}/${id}`} className="movie-card">
+        <Link to={`/${kind}/${id}`} className="movie-card" style={{ '--col': index % 6 }}>
             <div className="card-poster">
                 <img
                     src={poster_path ? `https://image.tmdb.org/t/p/w500/${poster_path}` : `${import.meta.env.BASE_URL}no-movie.png`}
                     alt={title}
+                    className="card-poster-img"
                 />
                 {isCam && <span className="card-cam-badge">CAM</span>}
             </div>

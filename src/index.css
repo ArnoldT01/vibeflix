@@ -217,6 +217,28 @@
   }
 }
 
+/* ── Card slide-in (left → right stagger by column) ── */
+.movie-card {
+  animation: card-slide-in 0.45s ease both;
+  animation-delay: calc(var(--col, 0) * 0.07s);
+}
+
+@keyframes card-slide-in {
+  from { opacity: 0; transform: translateX(-28px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ── Poster image wipe reveal left → right ── */
+.card-poster-img {
+  animation: img-wipe 0.55s ease both;
+  animation-delay: calc(var(--col, 0) * 0.07s + 0.1s);
+}
+
+@keyframes img-wipe {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0% 0 0); }
+}
+
 @utility text-gradient {
   @apply bg-linear-to-r from-[#D6C7FF] to-[#AB8BFF] bg-clip-text text-transparent;
 }

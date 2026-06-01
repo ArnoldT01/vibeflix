@@ -59,9 +59,9 @@ const TrendingMovies = ({ mediaType = 'all' }) => {
                 <div className="trending-wrapper">
                     {!atStart && <button className="scroll-btn scroll-btn-left" onClick={() => scroll(-1)} aria-label="Scroll left">&#8249;</button>}
                     <div className="trending-scroll" ref={scrollRef}>
-                        {movies.map((movie) => (
+                        {movies.map((movie, i) => (
                             <div className="trending-item" key={movie.id}>
-                                <MovieCard movie={movie} />
+                                <MovieCard movie={movie} index={i} />
                             </div>
                         ))}
                     </div>

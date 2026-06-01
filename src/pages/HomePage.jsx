@@ -4,6 +4,7 @@ import Filters from '../components/Filters';
 import Spinner from '../components/Spinner';
 import MovieCard from '../components/MovieCard';
 import TrendingMovies from '../components/TrendingMovies';
+import HeroSection from '../components/HeroSection';
 import '../styles/home.css';
 
 const HomePage = () => {
@@ -21,28 +22,28 @@ const HomePage = () => {
 
     return (
         <main>
+            <nav className="site-nav">
+                <img src="/favicon.svg" alt="VibeFlix" className="w-9 h-9" />
+                <span className="text-gradient" style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.75rem', letterSpacing: '0.06em' }}>
+                    VibeFlix
+                </span>
+            </nav>
+
+            <HeroSection mediaType={mediaType} />
+
             <div className="wrapper">
-                <nav className="flex items-center gap-3 mb-6">
-                    <img src="/favicon.svg" alt="VibeFlix" className="w-10 h-10" />
-                    <span className="text-gradient" style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '2rem', letterSpacing: '0.06em' }}>
-                        VibeFlix
-                    </span>
-                </nav>
-                <header>
-                    <h1>Find <span className="text-gradient">Movies</span> You'll Enjoy Without the Hassle</h1>
-                    <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-                    <Filters
-                        genres={genres}
-                        selectedYear={selectedYear}
-                        setSelectedYear={setSelectedYear}
-                        ratingSort={ratingSort}
-                        setRatingSort={setRatingSort}
-                        selectedGenre={selectedGenre}
-                        setSelectedGenre={setSelectedGenre}
-                        mediaType={mediaType}
-                        setMediaType={setMediaType}
-                    />
-                </header>
+                <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+                <Filters
+                    genres={genres}
+                    selectedYear={selectedYear}
+                    setSelectedYear={setSelectedYear}
+                    ratingSort={ratingSort}
+                    setRatingSort={setRatingSort}
+                    selectedGenre={selectedGenre}
+                    setSelectedGenre={setSelectedGenre}
+                    mediaType={mediaType}
+                    setMediaType={setMediaType}
+                />
 
                 {!searchTerm && !selectedYear && !ratingSort && !selectedGenre && (
                     <TrendingMovies mediaType={mediaType} />
@@ -57,8 +58,8 @@ const HomePage = () => {
                     ) : (
                         <>
                             <ul>
-                                {movieList.map((movie) => (
-                                    <MovieCard key={movie.id} movie={movie} />
+                                {movieList.map((movie, i) => (
+                                    <MovieCard key={movie.id} movie={movie} index={i} />
                                 ))}
                             </ul>
                             {hasMorePages && !isLoadingMore && (
