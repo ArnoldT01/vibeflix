@@ -45,13 +45,13 @@ const MovieCard = ({ movie }) => {
         <Link to={`/${kind}/${id}`} className="movie-card">
             <div className="card-poster">
                 <img
-                    src={poster_path ? `https://image.tmdb.org/t/p/w500/${poster_path}` : `${import.meta.env.BASE_URL}/no-movie.png`}
+                    src={poster_path ? `https://image.tmdb.org/t/p/w500/${poster_path}` : `${import.meta.env.BASE_URL}no-movie.png`}
                     alt={title}
                 />
                 {isCam && <span className="card-cam-badge">CAM</span>}
             </div>
             <div className="card-rating">
-                <img src="star.svg" alt="Star" />
+                <img src={`${import.meta.env.BASE_URL}star.svg`} alt="Star" />
                 <span>{vote_average ? vote_average.toFixed(1) : 'N/A'}</span>
             </div>
             <div className="card-info">

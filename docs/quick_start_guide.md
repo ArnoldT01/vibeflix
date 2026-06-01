@@ -6,12 +6,16 @@
 npm i
 ```
 
-3. To run locally :  
+3. Add .env with all variables
+```
+```
+
+4. To run locally :  
 ```
 npm run dev
 ```
 
-4. To push to production :  
+5. To push to production :  
 ```
 npm run deploy
 ```

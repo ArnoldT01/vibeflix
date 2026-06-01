@@ -1,8 +1,15 @@
 # VibeFlix
 
-> Browse and search thousands of movies without the hassle.
+> Browse and watch movies and TV series — search, filter, and stream hassle free.
 
----
+## Features
+
+- Search movies and TV series
+- Filter by genre, year, rating, and media type
+- Trending section (weekly, updates per media type)
+- Movie detail pages with trailer popup and embedded player
+- Movie franchise / collection browsing
+- TV season tabs + episode list with per-episode playback
 
 ## Tech Stack
 
@@ -13,14 +20,6 @@
 | Data | The Movie Database (TMDb) API |
 | Deployment | GitHub Pages |
 
-## Features
-
-- Search across thousands of movies
-- Filter by year, genre, and rating
-- Sort by rating (low to high / high to low)
-- Paginated results with a Load More button
-
 ## Docs
 
-- [Quick Start Guide](docs/quick_start_guide.md)
-- [Dev Server Base Path](docs/dev_server_base_path.md)
+- [dev quick start guide](docs/quick_start_guide.md)
