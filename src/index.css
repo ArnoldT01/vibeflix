@@ -49,7 +49,7 @@
 
 @layer components {
   .wrapper {
-    @apply px-5 py-12 xs:p-10 max-w-7xl mx-auto flex flex-col relative z-10;
+    @apply px-5 pt-0 pb-12 xs:px-10 xs:pt-0 xs:pb-10 max-w-7xl mx-auto flex flex-col relative z-10;
   }
 
   .trending {

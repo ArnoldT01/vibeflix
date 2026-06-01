@@ -20,7 +20,7 @@
 /* ── Hero ── */
 .hero-section {
   position: relative;
-  height: 100vh;
+  height: 88vh;
   overflow: hidden;
   cursor: grab;
   user-select: none;
@@ -183,7 +183,7 @@
 
 /* ── Trending section ── */
 .trending-section {
-  margin: 2rem 0 1rem;
+  margin: 0 0 1rem;
 }
 
 .trending-section h2 {
