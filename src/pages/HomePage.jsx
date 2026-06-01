@@ -32,6 +32,8 @@ const HomePage = () => {
             <HeroSection mediaType={mediaType} />
 
             <div className="wrapper">
+                <TrendingMovies mediaType="all" />
+
                 <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
                 <Filters
                     genres={genres}
@@ -44,10 +46,6 @@ const HomePage = () => {
                     mediaType={mediaType}
                     setMediaType={setMediaType}
                 />
-
-                {!searchTerm && !selectedYear && !ratingSort && !selectedGenre && (
-                    <TrendingMovies mediaType={mediaType} />
-                )}
 
                 <section className="all-movies">
                     <h2>{mediaType === 'tv' ? 'All Series' : mediaType === 'movie' ? 'All Movies' : 'All'}</h2>
