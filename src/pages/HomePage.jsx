@@ -23,7 +23,7 @@ const HomePage = () => {
     return (
         <main>
             <nav className="site-nav">
-                <img src="/favicon.svg" alt="VibeFlix" className="w-9 h-9" />
+                <img src={`${import.meta.env.BASE_URL}favicon.svg`} alt="VibeFlix" className="w-9 h-9" />
                 <span className="text-gradient" style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.75rem', letterSpacing: '0.06em' }}>
                     VibeFlix
                 </span>
