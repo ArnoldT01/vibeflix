@@ -31,30 +31,34 @@
 
 .scroll-btn {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 0;
+  bottom: 0;
   z-index: 10;
-  background: rgba(15, 13, 35, 0.85);
-  border: 1px solid rgba(171, 139, 255, 0.25);
+  width: calc((100% - 5 * 1.25rem) / 12);
+  border: none;
   color: #fff;
-  font-size: 2rem;
-  line-height: 1;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  font-size: 2.5rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s;
+  transition: opacity 0.2s;
+  opacity: 0.75;
 }
 
 .scroll-btn:hover {
-  background: rgba(171, 139, 255, 0.25);
+  opacity: 1;
 }
 
-.scroll-btn-left  { left: -20px; }
-.scroll-btn-right { right: -20px; }
+.scroll-btn-left {
+  left: 0;
+  background: linear-gradient(to right, rgba(3, 0, 20, 0.92) 0%, rgba(171, 139, 255, 0.08) 85%, transparent 100%);
+}
+
+.scroll-btn-right {
+  right: 0;
+  background: linear-gradient(to left, rgba(3, 0, 20, 0.92) 0%, rgba(171, 139, 255, 0.08) 85%, transparent 100%);
+}
 
 /* ── Load more ── */
 .load-more {
