@@ -1,16 +1,7 @@
-import { useState, useEffect, useRef } from "react";
-import MovieCard from "./MovieCard";
-import Spinner from "./Spinner";
-
-const API_BASE_URL = 'https://api.themoviedb.org/3';
-const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
-const API_OPTIONS = {
-    method: 'GET',
-    headers: {
-        accept: 'application/json',
-        Authorization: `Bearer ${API_KEY}`
-    }
-};
+import { useState, useEffect, useRef } from 'react';
+import MovieCard from './MovieCard';
+import Spinner from './Spinner';
+import { API_BASE_URL, API_OPTIONS } from '../lib/tmdb';
 
 const TITLES = {
     movie: 'Trending Movies This Week',
@@ -26,31 +17,21 @@ const TrendingMovies = ({ mediaType = 'all' }) => {
     useEffect(() => {
         setIsLoading(true);
         const kind = mediaType === 'tv' ? 'tv' : mediaType === 'movie' ? 'movie' : 'all';
-        const fetchTrending = async () => {
-            try {
-                const response = await fetch(`${API_BASE_URL}/trending/${kind}/week`, API_OPTIONS);
-                const data = await response.json();
-                const results = (data.results || []).map(item => ({
+        fetch(`${API_BASE_URL}/trending/${kind}/week`, API_OPTIONS)
+            .then((r) => r.json())
+            .then((data) => {
+                setMovies((data.results || []).map((item) => ({
                     ...item,
                     title: item.title || item.name,
                     release_date: item.release_date || item.first_air_date,
                     media_type: item.media_type || kind,
-                }));
-                setMovies(results);
-            } catch (e) {
-                console.error('Failed to fetch trending', e);
-            } finally {
+                })));
                 setIsLoading(false);
-            }
-        };
-        fetchTrending();
+            })
+            .catch(() => setIsLoading(false));
     }, [mediaType]);
 
-    const scroll = (dir) => {
-        if (scrollRef.current) {
-            scrollRef.current.scrollBy({ left: dir * 320, behavior: 'smooth' });
-        }
-    };
+    const scroll = (dir) => scrollRef.current?.scrollBy({ left: dir * 320, behavior: 'smooth' });
 
     return (
         <section className="trending-section">
