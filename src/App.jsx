@@ -24,7 +24,6 @@ const App = () => {
 
     const [movieList, setMovieList] = useState([]);
     const [errorMessage, setErrorMessage] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
 
     const [currentPage, setCurrentPage] = useState(1);
     const [hasMorePages, setHasMorePages] = useState(true);
