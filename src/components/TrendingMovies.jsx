@@ -12,7 +12,16 @@ const TITLES = {
 const TrendingMovies = ({ mediaType = 'all' }) => {
     const [movies, setMovies] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [atStart, setAtStart] = useState(true);
+    const [atEnd, setAtEnd] = useState(false);
     const scrollRef = useRef(null);
+
+    const updateArrows = () => {
+        const el = scrollRef.current;
+        if (!el) return;
+        setAtStart(el.scrollLeft <= 0);
+        setAtEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 1);
+    };
 
     useEffect(() => {
         setIsLoading(true);
@@ -31,6 +40,14 @@ const TrendingMovies = ({ mediaType = 'all' }) => {
             .catch(() => setIsLoading(false));
     }, [mediaType]);
 
+    useEffect(() => {
+        const el = scrollRef.current;
+        if (!el) return;
+        updateArrows();
+        el.addEventListener('scroll', updateArrows);
+        return () => el.removeEventListener('scroll', updateArrows);
+    }, [movies]);
+
     const scroll = (dir) => scrollRef.current?.scrollBy({ left: dir * 320, behavior: 'smooth' });
 
     return (
@@ -40,7 +57,7 @@ const TrendingMovies = ({ mediaType = 'all' }) => {
                 <Spinner />
             ) : (
                 <div className="trending-wrapper">
-                    <button className="scroll-btn scroll-btn-left" onClick={() => scroll(-1)} aria-label="Scroll left">&#8249;</button>
+                    {!atStart && <button className="scroll-btn scroll-btn-left" onClick={() => scroll(-1)} aria-label="Scroll left">&#8249;</button>}
                     <div className="trending-scroll" ref={scrollRef}>
                         {movies.map((movie) => (
                             <div className="trending-item" key={movie.id}>
@@ -48,7 +65,7 @@ const TrendingMovies = ({ mediaType = 'all' }) => {
                             </div>
                         ))}
                     </div>
-                    <button className="scroll-btn scroll-btn-right" onClick={() => scroll(1)} aria-label="Scroll right">&#8250;</button>
+                    {!atEnd && <button className="scroll-btn scroll-btn-right" onClick={() => scroll(1)} aria-label="Scroll right">&#8250;</button>}
                 </div>
             )}
         </section>
