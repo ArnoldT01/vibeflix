@@ -164,6 +164,23 @@
   background: rgba(255, 255, 255, 0.85);
 }
 
+/* ── Section headings ── */
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.section-title::before {
+  content: '';
+  display: block;
+  width: 3px;
+  height: 1.1em;
+  background: #dc2626;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
 /* ── Trending section ── */
 .trending-section {
   margin: 2rem 0 1rem;

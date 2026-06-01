@@ -52,7 +52,7 @@ const TrendingMovies = ({ mediaType = 'all' }) => {
 
     return (
         <section className="trending-section">
-            <h2>{TITLES[mediaType] ?? TITLES.all}</h2>
+            <h2 className="section-title">{TITLES[mediaType] ?? TITLES.all}</h2>
             {isLoading ? (
                 <Spinner />
             ) : (

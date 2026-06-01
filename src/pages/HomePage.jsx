@@ -48,7 +48,7 @@ const HomePage = () => {
                 />
 
                 <section className="all-movies">
-                    <h2>{mediaType === 'tv' ? 'All Series' : mediaType === 'movie' ? 'All Movies' : 'All'}</h2>
+                    <h2 className="section-title">{mediaType === 'tv' ? 'All Series' : mediaType === 'movie' ? 'All Movies' : 'All'}</h2>
                     {isLoadingInitial ? (
                         <Spinner />
                     ) : errorMessage ? (
