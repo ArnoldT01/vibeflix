@@ -134,13 +134,22 @@ const HeroSection = ({ mediaType = 'all' }) => {
                         {year && <span>{year}</span>}
                     </div>
                     {overview && <p className="hero-overview">{overview}</p>}
-                    <button
-                        className="hero-btn"
-                        onMouseDown={(e) => e.stopPropagation()}
-                        onClick={() => navigate(`/${kind}/${m.id}`)}
-                    >
-                        ▶ Watch Now
-                    </button>
+                    <div className="hero-btns">
+                        <button
+                            className="hero-btn"
+                            onMouseDown={(e) => e.stopPropagation()}
+                            onClick={() => navigate(`/${kind}/${m.id}`)}
+                        >
+                            ▶ Watch Now
+                        </button>
+                        <button
+                            className="hero-btn hero-btn--secondary"
+                            onMouseDown={(e) => e.stopPropagation()}
+                            onClick={() => navigate(`/${kind}/${m.id}`)}
+                        >
+                            See More
+                        </button>
+                    </div>
                 </div>
             </div>
         );
