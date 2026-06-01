@@ -72,9 +72,9 @@ const MoviePage = () => {
     const embedBase = import.meta.env.VITE_PLAYER_URL;
     const embedSrc = pathKind === 'tv'
         ? selectedEp
-            ? `${embedBase}/tv/${id}/${selectedEp.season}/${selectedEp.episode}?autoplay=false`
-            : `${embedBase}/tv/${id}?autoplay=false`
-        : `${embedBase}/movie/${id}?autoplay=false`;
+            ? `${embedBase}/embed/tv/${id}/${selectedEp.season}/${selectedEp.episode}`
+            : `${embedBase}/embed/tv/${id}/1/1`
+        : `${embedBase}/embed/movie/${id}`;
 
     const handleEpisodeSelect = (ep) => {
         setSelectedEp(ep);
