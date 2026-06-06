@@ -42,40 +42,62 @@ export const useMovies = () => {
 
         try {
             const { year, genre, sort } = filters;
-            const kind = type === 'tv' ? 'tv' : 'movie';
 
-            let endpoint;
-            if (query) {
-                const params = new URLSearchParams({ query, page });
-                if (year) params.set(kind === 'tv' ? 'first_air_date_year' : 'year', year);
-                endpoint = `${API_BASE_URL}/search/${kind}?${params}`;
-            } else {
-                const sortBy = sort === 'asc' ? 'vote_average.asc' : sort === 'desc' ? 'vote_average.desc' : 'popularity.desc';
-                const params = new URLSearchParams({ sort_by: sortBy, page });
-                if (sort) params.set('vote_count.gte', 50);
-                if (year) params.set(kind === 'tv' ? 'first_air_date_year' : 'primary_release_year', year);
-                if (genre) params.set('with_genres', genre);
-                endpoint = `${API_BASE_URL}/discover/${kind}?${params}`;
-            }
+            const buildEndpoint = (kind) => {
+                if (query) {
+                    const params = new URLSearchParams({ query, page });
+                    if (year) params.set(kind === 'tv' ? 'first_air_date_year' : 'year', year);
+                    return `${API_BASE_URL}/search/${kind}?${params}`;
+                } else {
+                    const sortBy = sort === 'asc' ? 'vote_average.asc' : sort === 'desc' ? 'vote_average.desc' : 'popularity.desc';
+                    const params = new URLSearchParams({ sort_by: sortBy, page });
+                    if (sort) params.set('vote_count.gte', 50);
+                    if (year) params.set(kind === 'tv' ? 'first_air_date_year' : 'primary_release_year', year);
+                    if (genre) params.set('with_genres', genre);
+                    return `${API_BASE_URL}/discover/${kind}?${params}`;
+                }
+            };
 
-            const response = await fetch(endpoint, API_OPTIONS);
-            if (!response.ok) throw new Error('Failed to fetch');
-
-            const data = await response.json();
-            if (data.results.length === 0) { setHasMorePages(false); return; }
-
-            let results = data.results.map((item) => ({
+            const mapResults = (items, kind) => items.map((item) => ({
                 ...item,
                 title: item.title || item.name,
                 release_date: item.release_date || item.first_air_date,
                 media_type: kind,
             }));
 
-            if (query && sort === 'asc') results = [...results].sort((a, b) => a.vote_average - b.vote_average);
-            if (query && sort === 'desc') results = [...results].sort((a, b) => b.vote_average - a.vote_average);
+            let results, hasMore;
+
+            if (type === 'all') {
+                const [movieRes, tvRes] = await Promise.all([
+                    fetch(buildEndpoint('movie'), API_OPTIONS),
+                    fetch(buildEndpoint('tv'), API_OPTIONS),
+                ]);
+                if (!movieRes.ok || !tvRes.ok) throw new Error('Failed to fetch');
+                const [movieData, tvData] = await Promise.all([movieRes.json(), tvRes.json()]);
+
+                const combined = [
+                    ...mapResults(movieData.results || [], 'movie'),
+                    ...mapResults(tvData.results || [], 'tv'),
+                ].sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
+
+                results = combined;
+                hasMore = movieData.page < movieData.total_pages || tvData.page < tvData.total_pages;
+            } else {
+                const kind = type === 'tv' ? 'tv' : 'movie';
+                const response = await fetch(buildEndpoint(kind), API_OPTIONS);
+                if (!response.ok) throw new Error('Failed to fetch');
+                const data = await response.json();
+                results = mapResults(data.results || [], kind);
+                hasMore = data.page < data.total_pages;
+            }
+
+            if (results.length === 0) { setHasMorePages(false); return; }
+
+            if (sort === 'asc') results = [...results].sort((a, b) => a.vote_average - b.vote_average);
+            if (sort === 'desc') results = [...results].sort((a, b) => b.vote_average - a.vote_average);
 
             setMovieList((prev) => (isLoadMore ? [...prev, ...results] : results));
-            setHasMorePages(data.page < data.total_pages);
+            setHasMorePages(hasMore);
         } catch (error) {
             console.error('Error fetching:', error);
             setErrorMessage('Error fetching results. Please try again later.');
