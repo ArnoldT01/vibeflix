@@ -27,7 +27,7 @@ export const useMovies = () => {
     }, [searchTerm]);
 
     useEffect(() => {
-        const kind = mediaType === 'tv' ? 'tv' : 'movie';
+        const kind = mediaType === 'tv' || mediaType === 'anime' ? 'tv' : 'movie';
         fetch(`${API_BASE_URL}/genre/${kind}/list`, API_OPTIONS)
             .then((r) => r.json())
             .then((data) => { setGenres(data.genres || []); setSelectedGenre(''); })
@@ -42,18 +42,25 @@ export const useMovies = () => {
 
         try {
             const { year, genre, sort } = filters;
+            const isAnime = type === 'anime';
 
             const buildEndpoint = (kind) => {
                 if (query) {
                     const params = new URLSearchParams({ query, page });
                     if (year) params.set(kind === 'tv' ? 'first_air_date_year' : 'year', year);
+                    if (isAnime) params.set('with_original_language', 'ja');
                     return `${API_BASE_URL}/search/${kind}?${params}`;
                 } else {
                     const sortBy = sort === 'asc' ? 'vote_average.asc' : sort === 'desc' ? 'vote_average.desc' : 'popularity.desc';
                     const params = new URLSearchParams({ sort_by: sortBy, page });
                     if (sort) params.set('vote_count.gte', 50);
                     if (year) params.set(kind === 'tv' ? 'first_air_date_year' : 'primary_release_year', year);
-                    if (genre) params.set('with_genres', genre);
+                    if (isAnime) {
+                        params.set('with_genres', genre ? `${genre},16` : '16');
+                        params.set('with_original_language', 'ja');
+                    } else if (genre) {
+                        params.set('with_genres', genre);
+                    }
                     return `${API_BASE_URL}/discover/${kind}?${params}`;
                 }
             };
@@ -67,7 +74,7 @@ export const useMovies = () => {
 
             let results, hasMore;
 
-            if (type === 'all') {
+            if (type === 'all' || isAnime) {
                 const [movieRes, tvRes] = await Promise.all([
                     fetch(buildEndpoint('movie'), API_OPTIONS),
                     fetch(buildEndpoint('tv'), API_OPTIONS),

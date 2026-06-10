@@ -14,6 +14,7 @@ const Filters = ({ genres, selectedYear, setSelectedYear, ratingSort, setRatingS
                 <option value="all">All</option>
                 <option value="movie">Movies</option>
                 <option value="tv">Series</option>
+                <option value="anime">Anime</option>
             </select>
 
             <select
