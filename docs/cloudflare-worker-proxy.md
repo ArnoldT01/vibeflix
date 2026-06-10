@@ -32,8 +32,18 @@ Click **Edit code** and replace everything with:
 ```javascript
 export default {
   async fetch(request, env) {
-    const url = new URL(request.url);
+    const origin = request.headers.get('Origin') || '';
+    const referer = request.headers.get('Referer') || '';
+    const allowed = ['arnoldmavhunga.xyz', 'vibeflix.co.za', 'localhost'];
 
+    const originAllowed = allowed.some(domain => origin.includes(domain));
+    const refererAllowed = allowed.some(domain => referer.includes(domain));
+
+    if (!originAllowed && !refererAllowed) {
+      return new Response('Forbidden', { status: 403 });
+    }
+
+    const url = new URL(request.url);
     const tmdbUrl = `https://api.themoviedb.org${url.pathname}${url.search}`;
 
     const response = await fetch(tmdbUrl, {
@@ -48,7 +58,7 @@ export default {
     return new Response(JSON.stringify(data), {
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Origin": originAllowed ? origin : '',
       },
     });
   },
