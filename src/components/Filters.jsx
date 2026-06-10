@@ -1,7 +1,7 @@
 import React from "react";
 
 const currentYear = new Date().getFullYear();
-const years = Array.from({ length: currentYear - 1899 }, (_, i) => currentYear - i);
+const years = Array.from({ length: currentYear - 2006 }, (_, i) => currentYear - i);
 
 const Filters = ({ genres, selectedYear, setSelectedYear, ratingSort, setRatingSort, selectedGenre, setSelectedGenre, mediaType, setMediaType }) => {
     return (
@@ -26,6 +26,7 @@ const Filters = ({ genres, selectedYear, setSelectedYear, ratingSort, setRatingS
                 {years.map((year) => (
                     <option key={year} value={year}>{year}</option>
                 ))}
+                <option value="pre2006">Pre 2006</option>
             </select>
 
             <select

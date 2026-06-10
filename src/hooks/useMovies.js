@@ -47,14 +47,15 @@ export const useMovies = () => {
             const buildEndpoint = (kind) => {
                 if (query) {
                     const params = new URLSearchParams({ query, page });
-                    if (year) params.set(kind === 'tv' ? 'first_air_date_year' : 'year', year);
+                    if (year && year !== 'pre2006') params.set(kind === 'tv' ? 'first_air_date_year' : 'year', year);
                     if (isAnime) params.set('with_original_language', 'ja');
                     return `${API_BASE_URL}/search/${kind}?${params}`;
                 } else {
                     const sortBy = sort === 'asc' ? 'vote_average.asc' : sort === 'desc' ? 'vote_average.desc' : 'popularity.desc';
                     const params = new URLSearchParams({ sort_by: sortBy, page });
                     if (sort) params.set('vote_count.gte', 50);
-                    if (year) params.set(kind === 'tv' ? 'first_air_date_year' : 'primary_release_year', year);
+                    if (year === 'pre2006') params.set(kind === 'tv' ? 'first_air_date.lte' : 'primary_release_date.lte', '2006-12-31');
+                    else if (year) params.set(kind === 'tv' ? 'first_air_date_year' : 'primary_release_year', year);
                     if (isAnime) {
                         params.set('with_genres', genre ? `${genre},16` : '16');
                         params.set('with_original_language', 'ja');
