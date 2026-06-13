@@ -125,6 +125,81 @@
     display: block;
 }
 
+/* ── Player error state ── */
+.wp-player-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    width: 100%;
+    height: 100%;
+    background: #06041a;
+    text-align: center;
+    padding: 2rem;
+}
+
+.wp-player-error-icon {
+    font-size: 2rem;
+    color: #AB8BFF;
+    margin-bottom: 0.25rem;
+}
+
+.wp-player-error-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #fff;
+    margin: 0;
+}
+
+.wp-player-error-sub {
+    font-size: 0.82rem;
+    color: #7a7790;
+    margin: 0;
+}
+
+.wp-player-error-btn {
+    margin-top: 0.75rem;
+    padding: 0.45rem 1.2rem;
+    background: #AB8BFF;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.wp-player-error-btn:hover {
+    background: #9070e8;
+}
+
+.wp-player-side .player-trouble-row {
+    text-align: center;
+    padding: 0.35rem 0 0;
+    animation: fadeInDelayedWp 0.8s ease 10s both;
+}
+
+@keyframes fadeInDelayedWp {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.wp-player-side .player-trouble-btn {
+    background: none;
+    border: none;
+    color: #5c5870;
+    font-size: 0.78rem;
+    cursor: pointer;
+    padding: 0.2rem 0.5rem;
+    transition: color 0.2s;
+}
+
+.wp-player-side .player-trouble-btn:hover {
+    color: #AB8BFF;
+}
+
 /* ── Waiting state ── */
 .wp-waiting {
     display: flex;

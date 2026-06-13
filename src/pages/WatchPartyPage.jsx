@@ -28,6 +28,8 @@ const WatchPartyPage = () => {
     const navigate = useNavigate();
     const { session, setAuthModal } = useAuth();
     const [copied, setCopied] = useState(false);
+    const [wpError, setWpError] = useState(false);
+    const [wpIframeKey, setWpIframeKey] = useState(0);
 
     const {
         room, isHost, messages, participants,
@@ -98,13 +100,24 @@ const WatchPartyPage = () => {
                 <div className="wp-player-side">
                     <div className="wp-player-wrap">
                         {playerStarted ? (
-                            <iframe
-                                src={embedSrc}
-                                className="wp-player"
-                                title={room.title}
-                                allowFullScreen
-                                referrerPolicy="origin"
-                            />
+                            wpError ? (
+                                <div className="wp-player-error">
+                                    <span className="wp-player-error-icon">⚠</span>
+                                    <p className="wp-player-error-title">Video unavailable</p>
+                                    <p className="wp-player-error-sub">The video source couldn't be loaded.</p>
+                                    <button className="wp-player-error-btn" onClick={() => { setWpError(false); setWpIframeKey((k) => k + 1); }}>Try again</button>
+                                </div>
+                            ) : (
+                                <iframe
+                                    key={wpIframeKey}
+                                    src={embedSrc}
+                                    className="wp-player"
+                                    title={room.title}
+                                    allowFullScreen
+                                    referrerPolicy="origin"
+                                    onError={() => setWpError(true)}
+                                />
+                            )
                         ) : (
                             <div className="wp-waiting">
                                 {room.poster_path && (
@@ -129,6 +142,14 @@ const WatchPartyPage = () => {
                             </div>
                         )}
                     </div>
+
+                    {playerStarted && !wpError && (
+                        <div className="player-trouble-row">
+                            <button className="player-trouble-btn" onClick={() => { setWpError(false); setWpIframeKey((k) => k + 1); }}>
+                                Video not loading? Retry
+                            </button>
+                        </div>
+                    )}
 
                     {/* Host episode controls for TV */}
                     {isHost && room.media_type === 'tv' && (

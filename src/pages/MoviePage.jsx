@@ -31,6 +31,8 @@ const MoviePage = () => {
     const [collection, setCollection] = useState(null);
     const [selectedEp, setSelectedEp] = useState(null);
     const [playerLoaded, setPlayerLoaded] = useState(false);
+    const [playerError, setPlayerError] = useState(false);
+    const [iframeKey, setIframeKey] = useState(0);
     const [cast, setCast] = useState([]);
 
     const { session, requireAuth } = useAuth();
@@ -52,6 +54,8 @@ const MoviePage = () => {
         setSelectedEp(null);
         setTrailerOpen(false);
         setPlayerLoaded(false);
+        setPlayerError(false);
+        setIframeKey(0);
         setCast([]);
 
         const load = async () => {
@@ -112,9 +116,16 @@ const MoviePage = () => {
         recordHistory(pathKind, id, details);
     };
 
+    const handleRetry = () => {
+        setPlayerError(false);
+        setIframeKey((k) => k + 1);
+    };
+
     const handleEpisodeSelect = (ep) => {
         setSelectedEp(ep);
         setPlayerLoaded(true);
+        setPlayerError(false);
+        setIframeKey((k) => k + 1);
         recordHistory(pathKind, id, details);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
@@ -136,7 +147,23 @@ const MoviePage = () => {
                 <div className="detail-player-wrap">
                     <div className="movie-page-player">
                         {playerLoaded ? (
-                            <iframe src={embedSrc} title={title} allowFullScreen referrerPolicy="origin" />
+                            playerError ? (
+                                <div className="player-error">
+                                    <span className="player-error-icon">⚠</span>
+                                    <p className="player-error-title">Video unavailable</p>
+                                    <p className="player-error-sub">The video source couldn't be loaded.</p>
+                                    <button className="player-error-btn" onClick={handleRetry}>Try again</button>
+                                </div>
+                            ) : (
+                                <iframe
+                                    key={iframeKey}
+                                    src={embedSrc}
+                                    title={title}
+                                    allowFullScreen
+                                    referrerPolicy="origin"
+                                    onError={() => setPlayerError(true)}
+                                />
+                            )
                         ) : (
                             <button
                                 className="player-placeholder"
@@ -149,6 +176,13 @@ const MoviePage = () => {
                             </button>
                         )}
                     </div>
+                    {playerLoaded && !playerError && (
+                        <div className="player-trouble-row">
+                            <button className="player-trouble-btn" onClick={handleRetry}>
+                                Video not loading? Retry
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
 
