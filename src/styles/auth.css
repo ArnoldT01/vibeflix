@@ -1,0 +1,468 @@
+.auth-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    background: rgba(3, 0, 20, 0.8);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.auth-modal {
+    position: relative;
+    background: #0e0b2a;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 2.5rem 2rem;
+    width: 100%;
+    max-width: 380px;
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+}
+
+.auth-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    transition: color 0.2s;
+}
+
+.auth-close:hover {
+    color: #fff;
+}
+
+.auth-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 1.75rem;
+    text-align: center;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+}
+
+.auth-input {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    color: #fff;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.auth-input::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+}
+
+.auth-input:focus {
+    border-color: rgba(139, 92, 246, 0.6);
+}
+
+/* ── Password field with inline action buttons ── */
+.pw-field-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.pw-input {
+    flex: 1;
+    padding-right: 5.5rem;
+}
+
+.pw-field-actions {
+    position: absolute;
+    right: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.pw-icon-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.35);
+    cursor: pointer;
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    transition: color 0.15s;
+}
+
+.pw-icon-btn:hover {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.pw-generate-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: none;
+    border: 1px dashed rgba(139, 92, 246, 0.45);
+    color: #a78bfa;
+    border-radius: 6px;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    align-self: flex-start;
+}
+
+.pw-generate-btn:hover {
+    background: rgba(124, 58, 237, 0.12);
+    border-color: rgba(139, 92, 246, 0.7);
+}
+
+/* ── Password rules ── */
+.pw-rules {
+    list-style: none;
+    padding: 0.25rem 0.25rem 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.pw-rule {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.4);
+    transition: color 0.2s;
+}
+
+.pw-rule--met {
+    color: #4ade80;
+}
+
+.pw-rule-icon {
+    font-size: 0.75rem;
+    width: 14px;
+    text-align: center;
+    flex-shrink: 0;
+    transition: color 0.2s;
+}
+
+.pw-rule--met .pw-rule-icon {
+    color: #4ade80;
+}
+
+.auth-error {
+    color: #f87171;
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+.auth-success {
+    color: #4ade80;
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 0.5rem 0;
+}
+
+.auth-submit {
+    margin-top: 0.25rem;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: none;
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.auth-submit:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.auth-submit:not(:disabled):hover {
+    opacity: 0.85;
+}
+
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 0.78rem;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.auth-google-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+    width: 100%;
+    padding: 0.7rem;
+    background: #fff;
+    border: none;
+    border-radius: 8px;
+    color: #1f1f1f;
+    font-size: 0.92rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.auth-google-btn:hover {
+    background: #f0f0f0;
+}
+
+.auth-switch {
+    margin-top: 1.25rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.45);
+}
+
+.auth-switch-btn {
+    background: none;
+    border: none;
+    color: #a78bfa;
+    cursor: pointer;
+    font-size: 0.875rem;
+    padding: 0;
+    text-decoration: underline;
+}
+
+.auth-switch-btn:hover {
+    color: #c4b5fd;
+}
+
+/* ── User menu in nav ── */
+.nav-user-btn {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: none;
+    border: none;
+    border-radius: 999px;
+    padding: 0.35rem 0.75rem;
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.nav-user-btn:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.nav-user-btn--avatar {
+    padding: 0;
+    background: none;
+    border: none;
+    margin-left: 0;
+}
+
+.nav-user-btn--avatar:hover {
+    background: none;
+    opacity: 0.85;
+}
+
+.nav-user-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.nav-user-menu {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    background: #0e0b2a;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    min-width: 160px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+    z-index: 200;
+}
+
+.nav-user-menu a,
+.nav-user-menu button {
+    display: block;
+    width: 100%;
+    padding: 0.7rem 1rem;
+    text-align: left;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.875rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.15s;
+}
+
+.nav-user-menu a:hover,
+.nav-user-menu button:hover {
+    background: rgba(255, 255, 255, 0.07);
+    color: #fff;
+}
+
+.nav-user-menu .menu-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.07);
+    margin: 0.25rem 0;
+}
+
+/* ── Watchlist button on detail page ── */
+.watchlist-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.55rem 1.1rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.07);
+    color: #fff;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.watchlist-btn:hover {
+    background: rgba(255, 255, 255, 0.13);
+}
+
+.watchlist-btn.watchlist-btn--active {
+    background: rgba(124, 58, 237, 0.25);
+    border-color: rgba(139, 92, 246, 0.5);
+    color: #c4b5fd;
+}
+
+/* ── Watchlist page ── */
+.watchlist-page {
+    min-height: 100vh;
+    padding: 6rem 2.5rem 4rem;
+    background: #030014;
+    color: #fff;
+}
+
+.watchlist-page h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+}
+
+.watchlist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1rem;
+}
+
+.watchlist-empty {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 1rem;
+    margin-top: 2rem;
+}
+
+.watchlist-card {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.watchlist-card:hover {
+    transform: scale(1.04);
+}
+
+.watchlist-card img {
+    width: 100%;
+    aspect-ratio: 2/3;
+    object-fit: cover;
+    display: block;
+}
+
+.watchlist-card-placeholder {
+    width: 100%;
+    aspect-ratio: 2/3;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.watchlist-card-title {
+    padding: 0.5rem 0.25rem;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.75);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.watchlist-remove {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.4rem;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.6);
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.75rem;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.watchlist-card:hover .watchlist-remove {
+    display: flex;
+}
+
+.watchlist-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 1.5rem;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 0;
+}
+
+.watchlist-back:hover {
+    color: #fff;
+}
