@@ -2,8 +2,6 @@
 
 > Browse and watch movies and TV series — search, filter, and stream hassle free.
 
-Live: [arnoldt01.github.io/vibeflix](https://arnoldt01.github.io/vibeflix)
-
 ---
 
 ## Features
