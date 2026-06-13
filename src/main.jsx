@@ -8,6 +8,7 @@ import HomePage from './pages/HomePage.jsx'
 import MoviePage from './pages/MoviePage.jsx'
 import CastPage from './pages/CastPage.jsx'
 import WatchlistPage from './pages/WatchlistPage.jsx'
+import WatchPartyPage from './pages/WatchPartyPage.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -21,6 +22,7 @@ createRoot(document.getElementById('root')).render(
           <Route path="/movie/:id/cast" element={<CastPage />} />
           <Route path="/tv/:id/cast" element={<CastPage />} />
           <Route path="/library" element={<WatchlistPage />} />
+          <Route path="/watch/:roomCode" element={<WatchPartyPage />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>

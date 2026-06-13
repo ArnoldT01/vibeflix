@@ -4,6 +4,7 @@ import { API_BASE_URL, API_OPTIONS } from '../lib/tmdb';
 import { useAuth } from '../context/AuthContext';
 import { useWatchlist } from '../hooks/useWatchlist';
 import { useHistory } from '../hooks/useHistory';
+import { createWatchRoom } from '../hooks/useWatchParty';
 import FranchiseSection from '../components/FranchiseSection';
 import EpisodesSection from '../components/EpisodesSection';
 import '../styles/detail.css';
@@ -32,9 +33,10 @@ const MoviePage = () => {
     const [playerLoaded, setPlayerLoaded] = useState(false);
     const [cast, setCast] = useState([]);
 
-    const { requireAuth } = useAuth();
+    const { session, requireAuth } = useAuth();
     const { inWatchlist, toggle: toggleWatchlist, loading: wlLoading } = useWatchlist(pathKind, id);
     const { record: recordHistory } = useHistory();
+    const [wpLoading, setWpLoading] = useState(false);
 
     useEffect(() => {
         if (!trailerOpen) return;
@@ -90,6 +92,20 @@ const MoviePage = () => {
             ? `${embedBase}/tv/${id}/${selectedEp.season}/${selectedEp.episode}`
             : `${embedBase}/tv/${id}/1/1`
         : `${embedBase}/movie/${id}`;
+
+    const handleWatchParty = () => {
+        requireAuth(async () => {
+            setWpLoading(true);
+            try {
+                const season = selectedEp?.season ?? 1;
+                const episode = selectedEp?.episode ?? 1;
+                const room = await createWatchRoom(session, pathKind, id, details, season, episode);
+                navigate(`/watch/${room.room_code}`);
+            } finally {
+                setWpLoading(false);
+            }
+        });
+    };
 
     const handlePlayerLoad = () => {
         setPlayerLoaded(true);
@@ -169,6 +185,13 @@ const MoviePage = () => {
                                 onClick={() => requireAuth(() => toggleWatchlist(details))}
                             >
                                 {inWatchlist ? '✓ Watchlist' : '+ Watchlist'}
+                            </button>
+                            <button
+                                className="watchlist-btn"
+                                disabled={wpLoading}
+                                onClick={handleWatchParty}
+                            >
+                                {wpLoading ? '…' : '👥 Watch Party'}
                             </button>
                         </div>
                     </div>
