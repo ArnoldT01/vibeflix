@@ -21,6 +21,9 @@ export const AuthProvider = ({ children }) => {
 
     const signOut = () => supabase.auth.signOut();
 
+    const signInWithGoogle = () =>
+        supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + import.meta.env.BASE_URL } });
+
     const requireAuth = (callback) => {
         if (session) {
             callback();
@@ -30,7 +33,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ session, authModal, setAuthModal, signUp, signIn, signOut, requireAuth }}>
+        <AuthContext.Provider value={{ session, authModal, setAuthModal, signUp, signIn, signOut, signInWithGoogle, requireAuth }}>
             {children}
         </AuthContext.Provider>
     );
