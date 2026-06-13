@@ -35,11 +35,8 @@ const UserMenu = () => {
 
     return (
         <div ref={ref} style={{ position: 'relative', marginLeft: 'auto' }}>
-            <button className="nav-user-btn" onClick={() => setOpen((o) => !o)} style={{ marginLeft: 0 }}>
+            <button className="nav-user-btn nav-user-btn--avatar" onClick={() => setOpen((o) => !o)}>
                 <div className="nav-user-avatar">{initial}</div>
-                <span style={{ maxWidth: 120, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {session.user.email}
-                </span>
             </button>
             {open && (
                 <div className="nav-user-menu" onClick={() => setOpen(false)}>
