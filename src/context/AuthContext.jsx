@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
     const signOut = () => supabase.auth.signOut();
 
     const signInWithGoogle = () =>
-        supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + import.meta.env.BASE_URL } });
+        supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: `${window.location.origin}/vibeflix` } });
 
     const requireAuth = (callback) => {
         if (session) {

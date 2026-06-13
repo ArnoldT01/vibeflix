@@ -44,14 +44,15 @@ Before creating credentials you must set up the OAuth consent screen.
 ### Enable Google provider
 1. **Authentication → Providers → Google** → toggle **Enable**
 2. Paste the **Client ID** and **Client Secret** from Google
+   > Supabase may pre-fill these fields — ignore the pre-filled values and paste your own from Google Cloud Console
 3. Copy the **Callback URL** shown — this is what you added to Google in step 1
 4. Save
 
-### Add site URL
+### Add redirect URLs
 1. **Authentication → URL Configuration**
 2. Add to **Redirect URLs**:
    ```
-   http://localhost:5173
+   http://localhost:5173/vibeflix
    https://arnoldt01.github.io/vibeflix
    ```
 3. Save
@@ -65,4 +66,4 @@ Run locally:
 npm run dev
 ```
 
-Open the app, click **Sign In**, then **Continue with Google**. It should redirect to Google, let you sign in, and bring you back to the app.
+Open the app, click **Sign In**, then **Continue with Google**. It should redirect to Google, let you sign in, and bring you back to `http://localhost:5173/vibeflix`.
