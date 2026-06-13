@@ -1,4 +1,7 @@
+import { useRef, useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useMovies } from '../hooks/useMovies';
+import { useAuth } from '../context/AuthContext';
 import Search from '../components/Search';
 import Filters from '../components/Filters';
 import Spinner from '../components/Spinner';
@@ -6,6 +9,48 @@ import MovieCard from '../components/MovieCard';
 import TrendingMovies from '../components/TrendingMovies';
 import HeroSection from '../components/HeroSection';
 import '../styles/home.css';
+import '../styles/auth.css';
+
+const UserMenu = () => {
+    const { session, signOut, setAuthModal } = useAuth();
+    const [open, setOpen] = useState(false);
+    const ref = useRef(null);
+
+    useEffect(() => {
+        if (!open) return;
+        const handler = (e) => { if (!ref.current?.contains(e.target)) setOpen(false); };
+        document.addEventListener('mousedown', handler);
+        return () => document.removeEventListener('mousedown', handler);
+    }, [open]);
+
+    if (!session) {
+        return (
+            <button className="nav-user-btn" onClick={() => setAuthModal(true)}>
+                Sign In
+            </button>
+        );
+    }
+
+    const initial = (session.user.email?.[0] ?? '?').toUpperCase();
+
+    return (
+        <div ref={ref} style={{ position: 'relative', marginLeft: 'auto' }}>
+            <button className="nav-user-btn" onClick={() => setOpen((o) => !o)} style={{ marginLeft: 0 }}>
+                <div className="nav-user-avatar">{initial}</div>
+                <span style={{ maxWidth: 120, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {session.user.email}
+                </span>
+            </button>
+            {open && (
+                <div className="nav-user-menu" onClick={() => setOpen(false)}>
+                    <Link to="/library">My Library</Link>
+                    <div className="menu-divider" />
+                    <button onClick={signOut}>Sign Out</button>
+                </div>
+            )}
+        </div>
+    );
+};
 
 const HomePage = () => {
     const {
@@ -27,6 +72,7 @@ const HomePage = () => {
                 <span className="text-gradient" style={{ fontFamily: '"Bebas Neue", sans-serif', fontSize: '1.75rem', letterSpacing: '0.06em' }}>
                     VibeFlix
                 </span>
+                <UserMenu />
             </nav>
 
             <HeroSection mediaType={mediaType} />

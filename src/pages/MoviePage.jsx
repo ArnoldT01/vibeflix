@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useMatch, Link } from 'react-router-dom';
 import { API_BASE_URL, API_OPTIONS } from '../lib/tmdb';
+import { useAuth } from '../context/AuthContext';
+import { useWatchlist } from '../hooks/useWatchlist';
+import { useHistory } from '../hooks/useHistory';
 import FranchiseSection from '../components/FranchiseSection';
 import EpisodesSection from '../components/EpisodesSection';
 import '../styles/detail.css';
+import '../styles/auth.css';
 
 const IMG = 'https://image.tmdb.org/t/p';
 
@@ -27,6 +31,10 @@ const MoviePage = () => {
     const [selectedEp, setSelectedEp] = useState(null);
     const [playerLoaded, setPlayerLoaded] = useState(false);
     const [cast, setCast] = useState([]);
+
+    const { requireAuth } = useAuth();
+    const { inWatchlist, toggle: toggleWatchlist, loading: wlLoading } = useWatchlist(pathKind, id);
+    const { record: recordHistory } = useHistory();
 
     useEffect(() => {
         if (!trailerOpen) return;
@@ -83,9 +91,15 @@ const MoviePage = () => {
             : `${embedBase}/tv/${id}/1/1`
         : `${embedBase}/movie/${id}`;
 
+    const handlePlayerLoad = () => {
+        setPlayerLoaded(true);
+        recordHistory(pathKind, id, details);
+    };
+
     const handleEpisodeSelect = (ep) => {
         setSelectedEp(ep);
         setPlayerLoaded(true);
+        recordHistory(pathKind, id, details);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
@@ -111,7 +125,7 @@ const MoviePage = () => {
                             <button
                                 className="player-placeholder"
                                 style={backdrop ? { backgroundImage: `url(${backdrop})` } : {}}
-                                onClick={() => setPlayerLoaded(true)}
+                                onClick={handlePlayerLoad}
                                 aria-label="Play"
                             >
                                 <div className="player-placeholder-overlay" />
@@ -143,13 +157,20 @@ const MoviePage = () => {
                         {details.overview && (
                             <p className="detail-overview">{details.overview}</p>
                         )}
-                        {trailerKey && (
-                            <div className="detail-actions">
+                        <div className="detail-actions">
+                            {trailerKey && (
                                 <button className="page-btn page-btn--trailer" onClick={() => setTrailerOpen(true)}>
                                     Trailer
                                 </button>
-                            </div>
-                        )}
+                            )}
+                            <button
+                                className={`watchlist-btn${inWatchlist ? ' watchlist-btn--active' : ''}`}
+                                disabled={wlLoading}
+                                onClick={() => requireAuth(() => toggleWatchlist(details))}
+                            >
+                                {inWatchlist ? '✓ Watchlist' : '+ Watchlist'}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
