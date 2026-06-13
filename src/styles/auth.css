@@ -71,6 +71,62 @@
     border-color: rgba(139, 92, 246, 0.6);
 }
 
+/* ── Password field with inline action buttons ── */
+.pw-field-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.pw-input {
+    flex: 1;
+    padding-right: 5.5rem;
+}
+
+.pw-field-actions {
+    position: absolute;
+    right: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.pw-icon-btn {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.35);
+    cursor: pointer;
+    padding: 0.25rem;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    transition: color 0.15s;
+}
+
+.pw-icon-btn:hover {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.pw-generate-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: none;
+    border: 1px dashed rgba(139, 92, 246, 0.45);
+    color: #a78bfa;
+    border-radius: 6px;
+    padding: 0.4rem 0.75rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    align-self: flex-start;
+}
+
+.pw-generate-btn:hover {
+    background: rgba(124, 58, 237, 0.12);
+    border-color: rgba(139, 92, 246, 0.7);
+}
+
 /* ── Password rules ── */
 .pw-rules {
     list-style: none;
